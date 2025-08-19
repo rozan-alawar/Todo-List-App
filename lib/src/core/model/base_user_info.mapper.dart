@@ -31,9 +31,6 @@ class BaseUserInfoMapper extends ClassMapperBase<BaseUserInfo> {
       Field('subscribeNews', _$subscribeNews, key: r'subscribe_news');
   static String _$email(BaseUserInfo v) => v.email;
   static const Field<BaseUserInfo, String> _f$email = Field('email', _$email);
-  static String? _$dialCode(BaseUserInfo v) => v.dialCode;
-  static const Field<BaseUserInfo, String> _f$dialCode =
-      Field('dialCode', _$dialCode, key: r'dial_code', opt: true);
   static String? _$phone(BaseUserInfo v) => v.phone;
   static const Field<BaseUserInfo, String> _f$phone =
       Field('phone', _$phone, opt: true);
@@ -44,7 +41,6 @@ class BaseUserInfoMapper extends ClassMapperBase<BaseUserInfo> {
     #lastName: _f$lastName,
     #subscribeNews: _f$subscribeNews,
     #email: _f$email,
-    #dialCode: _f$dialCode,
     #phone: _f$phone,
   };
 
@@ -54,7 +50,6 @@ class BaseUserInfoMapper extends ClassMapperBase<BaseUserInfo> {
         lastName: data.dec(_f$lastName),
         subscribeNews: data.dec(_f$subscribeNews),
         email: data.dec(_f$email),
-        dialCode: data.dec(_f$dialCode),
         phone: data.dec(_f$phone));
   }
 
@@ -116,7 +111,6 @@ abstract class BaseUserInfoCopyWith<$R, $In extends BaseUserInfo, $Out>
       String? lastName,
       bool? subscribeNews,
       String? email,
-      String? dialCode,
       String? phone});
   BaseUserInfoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -135,14 +129,12 @@ class _BaseUserInfoCopyWithImpl<$R, $Out>
           String? lastName,
           bool? subscribeNews,
           String? email,
-          Object? dialCode = $none,
           Object? phone = $none}) =>
       $apply(FieldCopyWithData({
         if (firstName != null) #firstName: firstName,
         if (lastName != null) #lastName: lastName,
         if (subscribeNews != null) #subscribeNews: subscribeNews,
         if (email != null) #email: email,
-        if (dialCode != $none) #dialCode: dialCode,
         if (phone != $none) #phone: phone
       }));
   @override
@@ -151,7 +143,6 @@ class _BaseUserInfoCopyWithImpl<$R, $Out>
       lastName: data.get(#lastName, or: $value.lastName),
       subscribeNews: data.get(#subscribeNews, or: $value.subscribeNews),
       email: data.get(#email, or: $value.email),
-      dialCode: data.get(#dialCode, or: $value.dialCode),
       phone: data.get(#phone, or: $value.phone));
 
   @override

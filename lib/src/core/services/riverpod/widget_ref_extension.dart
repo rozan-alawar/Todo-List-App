@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/src/async_notifier.dart' as async_notifier;
 import 'package:riverpod/src/notifier.dart' as notifier;
+import 'package:todo_list_app/src/core/exceptions/app_error_extension.dart';
+import 'package:todo_list_app/src/core/routing/navigation_service.dart';
+import 'package:todo_list_app/src/core/view/component/base/custom_toast.dart';
+import 'package:todo_list_app/src/core/view/component/base/dialogs.dart';
 
 // import '../../../feature/auth/presentation/providers/auth_status_provider.dart';
 // import '../../config/locale/current_app_locale_provider.dart';
@@ -27,41 +31,38 @@ extension WidgetRefExtension on WidgetRef {
   /// You can set handleLoading/handleError to false to turn off auto handling for either of them.
   ///
   /// Use `whenData` If you want to perform something when the newState is data.
-  // void easyListen<T>(
-  //   ProviderListenable<AsyncValue<T>> provider, {
-  //   bool handleLoading = true,
-  //   bool handleError = true,
-  //   void Function(T data)? whenData,
-  //   String? Function(Object)? whenError,
-  // }) {
-  //   return listen(
-  //     provider,
-  //     (prevState, newState) {
-  //       debugPrint(' $newState');
-  //       switch (prevState) {
-  //         case AsyncValue(isLoading: true):
-  //           if (handleLoading) NavigationService.popLoadingDialog(context);
-  //       }
-  //       switch (newState) {
-  //         case AsyncValue(isLoading: true):
-  //           if (handleLoading) Dialogs.showLoadingDialog(context);
-  //         case AsyncData(:final value):
-  //           whenData?.call(value);
-  //         case AsyncError(:final error) when whenError != null:
-  //           final msg = whenError.call(error);
-  //           if (msg != null) {
-  //             CustomToast.showErrorMessage(context, msg);
-  //           } else if (handleError) {
-  //             CustomToast.showErrorMessage(context, error.errorMessage(context));
-  //           }
-  //         case AsyncError(:final error) when whenError == null:
-  //           if (handleError) {
-  //             CustomToast.showErrorMessage(context, error.errorMessage(context));
-  //           }
-  //       }
-  //     },
-  //   );
-  // }
+  void easyListen<T>(
+    ProviderListenable<AsyncValue<T>> provider, {
+    bool handleLoading = true,
+    bool handleError = true,
+    void Function(T data)? whenData,
+    String? Function(Object)? whenError,
+  }) {
+    return listen(provider, (prevState, newState) {
+      debugPrint(' $newState');
+      switch (prevState) {
+        case AsyncValue(isLoading: true):
+          if (handleLoading) NavigationService.popLoadingDialog(context);
+      }
+      switch (newState) {
+        case AsyncValue(isLoading: true):
+          if (handleLoading) Dialogs.showLoadingDialog(context);
+        case AsyncData(:final value):
+          whenData?.call(value);
+        case AsyncError(:final error) when whenError != null:
+          final msg = whenError.call(error);
+          if (msg != null) {
+            CustomToast.showErrorMessage(context, msg);
+          } else if (handleError) {
+            CustomToast.showErrorMessage(context, error.errorMessage(context));
+          }
+        case AsyncError(:final error) when whenError == null:
+          if (handleError) {
+            CustomToast.showErrorMessage(context, error.errorMessage(context));
+          }
+      }
+    });
+  }
 
   /// Keep listening to a provider until a Future function is complete.
   ///

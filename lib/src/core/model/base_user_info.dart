@@ -9,13 +9,12 @@ class BaseUserInfo with BaseUserInfoMappable {
     @MappableField(key: 'last_name') required this.lastName,
     @MappableField(key: 'subscribe_news') required this.subscribeNews,
     required this.email,
-    @MappableField(key: 'dial_code') this.dialCode,
+
     this.phone,
   });
   final String firstName;
   final String lastName;
   final String email;
   final String? phone;
-  final String? dialCode;
   final bool subscribeNews;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
 import 'package:todo_list_app/src/core/extentions/space_extention.dart';
 import 'package:todo_list_app/src/core/gen/app_assets.dart';
@@ -39,7 +40,7 @@ class SplashScreenCompact extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: AppButton(
-              onPressed: () {},
+              onPressed: () => context.go('/login'),
               roundCorner: 16,
               type: AppButtonType.primary,
               child: Text(

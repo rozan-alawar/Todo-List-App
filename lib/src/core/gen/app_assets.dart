@@ -7,6 +7,10 @@ class AppAssets {
   /// ![preview](file://C:\sinces\FLutter\Flutter projects\todo_list_app\assets\icons\arrow.svg)
   static const String ASSETS_ICONS_ARROW_SVG = 'assets/icons/arrow.svg';
 
+  /// ![preview](file://C:\sinces\FLutter\Flutter projects\todo_list_app\assets\icons\arrow_down.svg)
+  static const String ASSETS_ICONS_ARROW_DOWN_SVG =
+      'assets/icons/arrow_down.svg';
+
   /// ![preview](file://C:\sinces\FLutter\Flutter projects\todo_list_app\assets\icons\eye_off.svg)
   static const String ASSETS_ICONS_EYE_OFF_SVG = 'assets/icons/eye_off.svg';
 
@@ -21,6 +25,9 @@ class AppAssets {
 
   /// ![preview](file://C:\sinces\FLutter\Flutter projects\todo_list_app\assets\icons\warning.svg)
   static const String ASSETS_ICONS_WARNING_SVG = 'assets/icons/warning.svg';
+
+  /// ![preview](file://C:\sinces\FLutter\Flutter projects\todo_list_app\assets\images\bg.png)
+  static const String ASSETS_IMAGES_BG_PNG = 'assets/images/bg.png';
 
   /// ![preview](file://C:\sinces\FLutter\Flutter projects\todo_list_app\assets\images\placeholder.png)
   static const String ASSETS_IMAGES_PLACEHOLDER_PNG =

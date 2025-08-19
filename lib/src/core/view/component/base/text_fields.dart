@@ -238,3 +238,156 @@ class SearchTextField extends HookWidget {
     );
   }
 }
+
+class TaskTitleTextField extends StatelessWidget {
+  const TaskTitleTextField({
+    required this.controller,
+    super.key,
+    this.autoFocus = false,
+    this.fillColor,
+    this.enabled,
+    this.suffixIcon,
+    this.filled = true,
+  });
+
+  final TextEditingController controller;
+  final bool autoFocus;
+  final Color? fillColor;
+  final bool? enabled;
+  final Widget? suffixIcon;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      autofocus: autoFocus,
+      controller: controller,
+      enabled: enabled,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (email) =>
+          ValidatorFields.isValidTaskTitle(context)?.call(email?.trim()),
+      style: !filled
+          ? TextStyles.f16(
+              context,
+            ).copyWith(color: appSwitcherColors(context).neutralColors.shade600)
+          : null,
+      decoration: InputDecoration(
+        hintText: "Enter task title",
+        filled: filled,
+        enabledBorder: !filled ? const OutlineInputBorder() : null,
+        suffixIcon: suffixIcon,
+        fillColor: fillColor,
+      ),
+    );
+  }
+}
+
+class DescriptionTextField extends StatelessWidget {
+  const DescriptionTextField({
+    required this.controller,
+    super.key,
+    this.autoFocus = false,
+    this.fillColor,
+    this.enabled,
+    this.suffixIcon,
+    this.filled = true,
+  });
+
+  final TextEditingController controller;
+  final bool autoFocus;
+  final Color? fillColor;
+  final bool? enabled;
+  final Widget? suffixIcon;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      autofocus: autoFocus,
+      controller: controller,
+      enabled: enabled,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (email) =>
+          ValidatorFields.isValidDescription(context)?.call(email?.trim()),
+      style: !filled
+          ? TextStyles.f16(
+              context,
+            ).copyWith(color: appSwitcherColors(context).neutralColors.shade600)
+          : null,
+      decoration: InputDecoration(
+        hintText: "Enter description",
+        filled: filled,
+        enabledBorder: !filled ? const OutlineInputBorder() : null,
+        suffixIcon: suffixIcon,
+        fillColor: fillColor,
+      ),
+    );
+  }
+}
+
+class DateTextField extends StatelessWidget {
+  const DateTextField({
+    super.key,
+    required this.dateController,
+    required this.selectedDate,
+    this.onTap,
+  });
+
+  final TextEditingController dateController;
+  final ValueNotifier<DateTime?> selectedDate;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: dateController,
+      readOnly: true,
+      onTap: onTap,
+      validator: (value) {
+        if (selectedDate.value == null) {
+          return 'Date is required';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        hintText: "Select date",
+        prefixIcon: const Icon(Icons.calendar_today),
+        suffixIcon: const Icon(Icons.arrow_drop_down),
+      ),
+    );
+  }
+}
+
+class TimeTextField extends StatelessWidget {
+  const TimeTextField({
+    required this.onTap,
+    required this.timeController,
+    required this.selectedTime,
+    super.key,
+  });
+
+  final VoidCallback onTap;
+  final TextEditingController timeController;
+  final ValueNotifier<TimeOfDay?> selectedTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: timeController,
+      readOnly: true,
+      onTap: onTap,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        if (selectedTime.value == null) {
+          return 'Time is required';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        hintText: "Select time",
+        fillColor: const Color(0xff1A2230),
+        suffixIcon: const Icon(Icons.access_time),
+      ),
+    );
+  }
+}

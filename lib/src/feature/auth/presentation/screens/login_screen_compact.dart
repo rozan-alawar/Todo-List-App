@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
 import 'package:todo_list_app/src/core/gen/app_assets.dart';
 import 'package:todo_list_app/src/core/utils/const/sizes.dart';
 import 'package:todo_list_app/src/core/utils/const/validator_fields.dart';
@@ -57,7 +59,7 @@ class LoginScreenCompact extends HookConsumerWidget {
     }
 
     Future<void> submitToLogin() async {
-      // If loading, do nothing
+      context.go('/home'); // If loading, do nothing
       // if (          ref.read(loginStateProvider).isLoading) {
       //   return;
       // }
@@ -110,7 +112,7 @@ class LoginScreenCompact extends HookConsumerWidget {
                           label: "Email",
                           child: EmailTextField(
                             controller: emailController,
-                            fillColor: const Color(0xff0F192A),
+                            fillColor: Color(0xff1A2230),
                           ),
                         ),
                         const SizedBox(height: Sizes.marginV16),
@@ -118,7 +120,7 @@ class LoginScreenCompact extends HookConsumerWidget {
                           label: "Password",
                           child: PasswordTextField(
                             controller: passwordController,
-                            fillColor: const Color(0xff0F192A),
+                            fillColor: Color(0xff1A2230),
                           ),
                         ),
                         const SizedBox(height: Sizes.marginV16),
@@ -148,7 +150,13 @@ class LoginScreenCompact extends HookConsumerWidget {
                               isLoading: isLoading,
                               onPressed: submitToLogin,
                               type: AppButtonType.primary,
-                              child: Text("Login"),
+                              child: Text(
+                                "Login",
+                                style: TextStyles.f16(context).copyWith(
+                                  fontWeight: FontStyles.fontWeightMedium,
+                                  color: fieldsIsValid ? Colors.white : null,
+                                ),
+                              ),
                             );
                           },
                         ),

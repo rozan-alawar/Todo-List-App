@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_app/src/feature/auth/presentation/screens/register_screen.dart';
 import 'package:todo_list_app/src/feature/home/presentation/screens/add_task_screen.dart';
 import 'package:todo_list_app/src/feature/home/presentation/screens/home_screen.dart';
 import 'package:todo_list_app/src/feature/intro/presentation/screens/splash_screen.dart';

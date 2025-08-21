@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:todo_list_app/src/core/gen/app_assets.dart';
 import 'package:todo_list_app/src/core/services/firebase_config/firebase_config.dart';
+import 'package:todo_list_app/src/feature/auth/domain/register_params.dart';
 import 'package:todo_list_app/src/feature/auth/domain/user_app_model.dart';
 
 part 'auth_remote_data_source.g.dart';
@@ -51,6 +52,34 @@ class AuthRemoteDataSource {
 
       if (user == null) {
         throw const UnknownFailure('Failed to sign in');
+      }
+
+      return user;
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseConfig.handleFirebaseAuthException(e);
+    } catch (e) {
+      throw UnknownFailure(e.toString());
+    }
+  }
+
+  // =====================================================
+  //                      Register
+  // =====================================================
+  Future<UserApp> register(RegisterParams params) async {
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(
+            email: params.email,
+            password: params.password,
+          );
+
+      final displayName = "${params.firstName} ${params.lastName}".trim();
+      await userCredential.user?.updateDisplayName(displayName);
+
+      final user = _userFromFirebase(userCredential.user);
+
+      if (user == null) {
+        throw const UnknownFailure('Failed to create account');
       }
 
       return user;

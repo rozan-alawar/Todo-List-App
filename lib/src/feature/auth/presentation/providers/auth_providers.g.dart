@@ -25,7 +25,7 @@ final loginStateProvider =
     );
 
 typedef _$LoginState = AutoDisposeAsyncNotifier<Option<({UserApp user})>>;
-String _$registerStateHash() => r'f950d191f50a516614c418d85a9876d11d0438e4';
+String _$registerStateHash() => r'57d27de0ae3913af0446f49af8e7e4ca3aa76443';
 
 /// See also [RegisterState].
 @ProviderFor(RegisterState)

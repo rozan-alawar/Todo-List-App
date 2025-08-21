@@ -4,13 +4,15 @@ import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
 import 'package:todo_list_app/src/core/extentions/space_extention.dart';
 import 'package:todo_list_app/src/core/gen/app_assets.dart';
 import 'package:todo_list_app/src/core/view/component/base/buttons.dart';
+import 'package:todo_list_app/src/core/view/component/base/safe_scaffold.dart';
 
 class SplashScreenCompact extends StatelessWidget {
   const SplashScreenCompact({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeScaffold(
+      safeTop: true,
       body: Column(
         children: [
           Image.asset(

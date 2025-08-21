@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:todo_list_app/src/feature/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:todo_list_app/src/feature/auth/domain/register_params.dart';
 
 import '../../../../core/services/riverpod/widget_ref_extension.dart';
 import '../../domain/user_app_model.dart';
@@ -38,14 +39,13 @@ class RegisterState extends _$RegisterState {
     return const None();
   }
 
-  // Future<void> register(RegisterParams params) async {
-  //   state = const AsyncLoading();
-  //   state = await AsyncValue.guard(() async {
-  //     await ref.read(authRepoProvider).register(params);
-  //     await analytics.logSignUp(signUpMethod: 'email');
-  //     return const Some(unit);
-  //   });
-  // }
+  Future<void> register(RegisterParams params) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(authRemoteDataSourceProvider).register(params);
+      return const Some(unit);
+    });
+  }
 }
 
 /*================== VerifyForgetPasswordOtp =================*/

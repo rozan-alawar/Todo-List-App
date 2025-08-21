@@ -23,9 +23,10 @@ class LoginState extends _$LoginState {
 
   Future<void> login(String email, String password) async {
     state = const AsyncLoading();
-    // state = await AsyncValue.guard(() async {
-    //   final response = authRemoteDataSource.login(email, password);
-    // });
+    state = await AsyncValue.guard(() async {
+      final user = await authRemoteDataSource.login(email, password);
+      return Some((user: user));
+    });
   }
 }
 

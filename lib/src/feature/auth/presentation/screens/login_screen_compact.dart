@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
 import 'package:todo_list_app/src/core/gen/app_assets.dart';
+import 'package:todo_list_app/src/core/routing/app_route.dart';
+import 'package:todo_list_app/src/core/services/riverpod/widget_ref_extension.dart';
 import 'package:todo_list_app/src/core/utils/const/sizes.dart';
 import 'package:todo_list_app/src/core/utils/const/validator_fields.dart';
 import 'package:todo_list_app/src/core/view/component/base/buttons.dart';
@@ -22,26 +23,16 @@ class LoginScreenCompact extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
 
-    // ref.easyListen(
-    //   loginStateProvider,
-    //   handleLoading: false,
-    //   whenData: (data) {
-    //     if (data.isSome()) return const HomeRoute().go(context);
-    //   },
-    //   whenError: (error) {
-    //     if (error is NetworkException &&
-    //         error.type == ServerExceptionType.otpVerify) {
-    //       /// set email in provider
-    //       ref
-    //           .read(extraVerifyEmailProvider.notifier)
-    //           .update((_) => Some(emailCtr.text.trim()));
-
-    //       const Login$VerifyEmailRoute().go(context);
-    //       return error.message;
-    //     }
-    //     return null;
-    //   },
-    // );
+    ref.easyListen(
+      loginStateProvider,
+      handleLoading: false,
+      whenData: (data) {
+        if (data.isSome()) return const HomeRoute().go(context);
+      },
+      whenError: (error) {
+        return null;
+      },
+    );
 
     void verifyValidation() {
       final isEmailValid =
@@ -59,7 +50,7 @@ class LoginScreenCompact extends HookConsumerWidget {
     }
 
     Future<void> submitToLogin() async {
-      context.go('/home'); // If loading, do nothing
+      // context.go('/home'); // If loading, do nothing
       if (ref.read(loginStateProvider).isLoading) {
         return;
       }

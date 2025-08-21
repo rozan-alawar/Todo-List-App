@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../services/riverpod/util.dart';
 import 'app_exception.dart';
 
 extension AppErrorExtension on Object? {
@@ -27,7 +26,6 @@ extension AppErrorExtension on Object? {
           when err.type == ServerExceptionType.unauthorized ||
               (err.type == ServerExceptionType.general) =>
         true,
-      final EmptyPageException _ || PaginationEndException _ => true,
       _ => false,
     };
   }

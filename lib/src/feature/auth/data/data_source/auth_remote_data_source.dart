@@ -1,36 +1,63 @@
-// import 'package:flutter/material.dart';
-// import 'package:hooks_riverpod/hooks_riverpod.dart';
-// import 'package:riverpod_annotation/riverpod_annotation.dart';
-// import 'package:todo_list_app/src/feature/auth/domain/auth_tokens.dart';
-// import 'package:todo_list_app/src/feature/auth/domain/user_app_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_app/src/core/gen/app_assets.dart';
+import 'package:todo_list_app/src/core/services/firebase_config/firebase_config.dart';
+import 'package:todo_list_app/src/feature/auth/domain/user_app_model.dart';
 
-// @Riverpod(keepAlive: true)
-// AuthRemoteDataSource authRemoteDataSource(Ref ref) {
-//   return AuthRemoteDataSource(ref.watch(networkServiceProvider));
-// }
+part 'auth_remote_data_source.g.dart';
 
-// @immutable
-// class AuthRemoteDataSource {
-//   const AuthRemoteDataSource(this.mainApiFacade);
-//   final NetworkService mainApiFacade;
+@Riverpod(keepAlive: true)
+AuthRemoteDataSource authRemoteDataSource(Ref ref) {
+  return AuthRemoteDataSource();
+}
 
-//   String get loginPath => '/login';
-//   String get registerPath => '/register';
-//   String get verifyOtpPath => '/verify-otp';
-//   String get sendOtpPath => '/send-otp';
-//   String get resetPasswordPath => '/reset-password';
-//   String get deleteUserPath => '/user/delete';
-//   String get verifySocialTokenPath => '/auth/verify-social-token';
+@immutable
+class AuthRemoteDataSource {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-//   Future<({UserApp user, AuthTokens token})> login(
-//     String email,
-//     String password,
-//     String fcmToken,
-//   ) async {
-//     final response = await mainApiFacade.post<Map<String, dynamic>>(
-//       path: loginPath,
-//       data: {'email': email, 'password': password, 'fcm_token': fcmToken},
-//     );
-//     return convertToUserModel(response.data!);
-//   }
-// }
+  String get loginPath => '/login';
+  String get registerPath => '/register';
+  String get verifyOtpPath => '/verify-otp';
+  String get sendOtpPath => '/send-otp';
+  String get resetPasswordPath => '/reset-password';
+  String get deleteUserPath => '/user/delete';
+  String get verifySocialTokenPath => '/auth/verify-social-token';
+
+  UserApp? _userFromFirebase(User? user) {
+    if (user == null) return null;
+
+    return UserApp(
+      id: user.uid,
+      fullName: user.displayName ?? "Null",
+      email: user.email ?? "Null",
+      phone: user.phoneNumber ?? "Null",
+      imageUrl: user.photoURL ?? AppAssets.ASSETS_IMAGES_PLACEHOLDER_PNG,
+    );
+  }
+
+  // =====================================================
+  //                      Login
+  // =====================================================
+  Future<UserApp> login(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final user = _userFromFirebase(userCredential.user);
+
+      if (user == null) {
+        throw const UnknownFailure('Failed to sign in');
+      }
+
+      return user;
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseConfig.handleFirebaseAuthException(e);
+    } catch (e) {
+      throw UnknownFailure(e.toString());
+    }
+  }
+}

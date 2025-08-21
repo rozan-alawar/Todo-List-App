@@ -60,22 +60,21 @@ class LoginScreenCompact extends HookConsumerWidget {
 
     Future<void> submitToLogin() async {
       context.go('/home'); // If loading, do nothing
-      // if (          ref.read(loginStateProvider).isLoading) {
-      //   return;
-      // }
+      if (ref.read(loginStateProvider).isLoading) {
+        return;
+      }
 
-      // // If form is valid and fields are valid, submit
-      // if (formKey.currentState!.validate() && fieldsIsValidNotifier.value) {
-      //   final fcmToken = await ref.read(fcmServiceProvider).getFcmToken();
-      //   // Call login method from provider
-      //   await ref
-      //       .read(loginStateProvider.notifier)
-      //       .login(emailCtr.text.trim(), passwordCtr.text, fcmToken);
-      // }
+      // If form is valid and fields are valid, submit
+      if (formKey.currentState!.validate() && fieldsIsValidNotifier.value) {
+        // Call login method from provider
+        await ref
+            .read(loginStateProvider.notifier)
+            .login(emailController.text.trim(), passwordController.text);
+      }
     }
 
     return SafeScaffold(
-      safeTop: false,
+      safeTop: true,
       safeBottom: false,
       extendBodyBehindAppBar: true,
       body: CustomScrollView(

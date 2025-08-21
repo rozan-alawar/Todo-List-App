@@ -42,22 +42,22 @@ class AuthTokensMapper extends ClassMapperBase<AuthTokens> {
   @override
   final Function instantiate = _instantiate;
 
-  static AuthTokens fromMap(Map<String, dynamic> map) {
+  static AuthTokens fromJson(Map<String, dynamic> map) {
     return ensureInitialized().decodeMap<AuthTokens>(map);
   }
 
-  static AuthTokens fromJson(String json) {
+  static AuthTokens deserialize(String json) {
     return ensureInitialized().decodeJson<AuthTokens>(json);
   }
 }
 
 mixin AuthTokensMappable {
-  String toJson() {
+  String serialize() {
     return AuthTokensMapper.ensureInitialized()
         .encodeJson<AuthTokens>(this as AuthTokens);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return AuthTokensMapper.ensureInitialized()
         .encodeMap<AuthTokens>(this as AuthTokens);
   }

@@ -2,36 +2,30 @@ import 'dart:async';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_app/src/feature/auth/data/data_source/auth_remote_data_source.dart';
 
 import '../../../../core/services/riverpod/widget_ref_extension.dart';
-import '../../domain/auth_tokens.dart';
 import '../../domain/user_app_model.dart';
 
 part 'auth_providers.g.dart';
 
 /*================== Login =================*/
+
 @riverpod
 class LoginState extends _$LoginState {
   @override
-  FutureOr<Option<({AuthTokens token, UserApp user})>> build() {
+  FutureOr<Option<({UserApp user})>> build() {
     return const None();
   }
 
-  Future<void> login(String email, String password, String fcmToken) async {
+  AuthRemoteDataSource get authRemoteDataSource =>
+      ref.read(authRemoteDataSourceProvider);
+
+  Future<void> login(String email, String password) async {
     state = const AsyncLoading();
     // state = await AsyncValue.guard(() async {
-    //   final response = await ref
-    //       .read(authRepoProvider)
-    //       .login(email, password, fcmToken);
-    //   ref
-    //       .read(authTokensStateProvider.notifier)
-    //       .updateAuthTokens(response.token);
-    //   ref.read(authStatusProvider.notifier).authenticateUser(response.user);
-    //   ref.invalidate(fetchRoundLineupProvider);
-    //   await analytics.logLogin(loginMethod: 'email');
-    //   return Some(response);
+    //   final response = authRemoteDataSource.login(email, password);
     // });
-    // }
   }
 }
 

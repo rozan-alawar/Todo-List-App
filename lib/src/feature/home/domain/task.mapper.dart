@@ -169,21 +169,21 @@ class TaskMapper extends ClassMapperBase<Task> {
   @override
   final Function instantiate = _instantiate;
 
-  static Task fromMap(Map<String, dynamic> map) {
+  static Task fromJson(Map<String, dynamic> map) {
     return ensureInitialized().decodeMap<Task>(map);
   }
 
-  static Task fromJson(String json) {
+  static Task deserialize(String json) {
     return ensureInitialized().decodeJson<Task>(json);
   }
 }
 
 mixin TaskMappable {
-  String toJson() {
+  String serialize() {
     return TaskMapper.ensureInitialized().encodeJson<Task>(this as Task);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return TaskMapper.ensureInitialized().encodeMap<Task>(this as Task);
   }
 

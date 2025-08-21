@@ -6,14 +6,14 @@ part of 'auth_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginStateHash() => r'07fe0f37a1a542fb9268be73bab4f77d44b625d3';
+String _$loginStateHash() => r'9d98e1bb4dea8f971552148d57833ea0f039673f';
 
 /// See also [LoginState].
 @ProviderFor(LoginState)
 final loginStateProvider =
     AutoDisposeAsyncNotifierProvider<
       LoginState,
-      Option<({AuthTokens token, UserApp user})>
+      Option<({UserApp user})>
     >.internal(
       LoginState.new,
       name: r'loginStateProvider',
@@ -24,8 +24,7 @@ final loginStateProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$LoginState =
-    AutoDisposeAsyncNotifier<Option<({AuthTokens token, UserApp user})>>;
+typedef _$LoginState = AutoDisposeAsyncNotifier<Option<({UserApp user})>>;
 String _$registerStateHash() => r'f950d191f50a516614c418d85a9876d11d0438e4';
 
 /// See also [RegisterState].

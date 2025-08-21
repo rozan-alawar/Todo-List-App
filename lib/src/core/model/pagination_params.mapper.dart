@@ -46,22 +46,22 @@ class PaginatedPageParamsMapper extends ClassMapperBase<PaginatedPageParams> {
   @override
   final Function instantiate = _instantiate;
 
-  static PaginatedPageParams fromMap(Map<String, dynamic> map) {
+  static PaginatedPageParams fromJson(Map<String, dynamic> map) {
     return ensureInitialized().decodeMap<PaginatedPageParams>(map);
   }
 
-  static PaginatedPageParams fromJson(String json) {
+  static PaginatedPageParams deserialize(String json) {
     return ensureInitialized().decodeJson<PaginatedPageParams>(json);
   }
 }
 
 mixin PaginatedPageParamsMappable {
-  String toJson() {
+  String serialize() {
     return PaginatedPageParamsMapper.ensureInitialized()
         .encodeJson<PaginatedPageParams>(this as PaginatedPageParams);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return PaginatedPageParamsMapper.ensureInitialized()
         .encodeMap<PaginatedPageParams>(this as PaginatedPageParams);
   }

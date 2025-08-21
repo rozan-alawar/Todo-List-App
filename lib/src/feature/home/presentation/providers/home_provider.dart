@@ -1,61 +1,130 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:todo_list_app/src/feature/home/domain/task.dart';
+import 'package:uuid/uuid.dart';
 
 part 'home_provider.g.dart';
 
 @riverpod
 class Home extends _$Home {
-  final tasks = [
-    Task(
-      id: '1',
-      title: 'Market Research',
-      description: 'Grocery shopping app design',
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 2)),
-      status: TaskStatus.completed,
-      time: '10:00 AM',
-      priority: TaskPriority.high,
-    ),
-    Task(
-      id: '2',
-      title: 'Competitive Analysis',
-      description: 'Grocery shopping app design',
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 3)),
-      status: TaskStatus.inProgress,
-      time: '12:00 PM',
-      priority: TaskPriority.medium,
-    ),
-    Task(
-      id: '3',
-      title: 'Create Low-fidelity Wireframe',
-      description: 'Uber Eats redesign challenge',
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 1)),
-      status: TaskStatus.toDo,
-      time: '07:00 PM',
-      priority: TaskPriority.low,
-    ),
-    Task(
-      id: '4',
-      title: 'How to pitch a Design Sprint',
-      description: 'About design sprint',
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 4)),
-      status: TaskStatus.toDo,
-      time: '09:00 PM',
-      priority: TaskPriority.medium,
-    ),
-  ];
-
   @override
-  List<Task> build() {
-    return tasks;
+  FutureOr<List<Task>> build() {
+    return [];
   }
 
   void addTask({
-    required String taskTitle,
-    required String taskDescription,
-    required String startDate,
-  }) {}
+    required String title,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+    required TaskStatus status,
+    required String time,
+    required TaskPriority priority,
+  }) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      const uuid = Uuid();
+      final newTask = Task(
+        id: uuid.v4(),
+        title: title,
+        description: description,
+        startDate: startDate,
+        endDate: endDate,
+        status: status,
+        time: time,
+        priority: priority,
+      );
+
+      final currentTasks = state.valueOrNull ?? [];
+      final updatedTasks = [...currentTasks, newTask];
+
+      // await ref
+      //     .read(sharedPrefFacadeProvider)
+      //     .saveData(key: "tasks", value: updatedTasks);
+
+      return updatedTasks;
+    });
+  }
+
+  void updateTaskStatus({
+    required Task task,
+    required TaskStatus status,
+  }) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final currentTasks = state.valueOrNull ?? [];
+      final updatedTasks = [
+        ...currentTasks.map(
+          (e) => e.id == task.id ? task.copyWith(status: status) : e,
+        ),
+      ];
+      return updatedTasks;
+    });
+  }
+}
+
+/*================== Selected Date Provider =================*/
+@riverpod
+class SelectedDate extends _$SelectedDate {
+  @override
+  DateTime build() {
+    return DateTime.now();
+  }
+
+  void selectDate(DateTime date) {
+    state = date;
+  }
+
+  void selectToday() {
+    state = DateTime.now();
+  }
+
+  void selectNextDay() {
+    state = state.add(const Duration(days: 1));
+  }
+
+  void selectPreviousDay() {
+    state = state.subtract(const Duration(days: 1));
+  }
+}
+
+/*================== Task Filter Provider =================*/
+enum TaskFilter { all, toDo, inProgress, completed }
+
+@riverpod
+class TaskFilterState extends _$TaskFilterState {
+  @override
+  TaskFilter build() {
+    return TaskFilter.all;
+  }
+
+  void setFilter(TaskFilter filter) {
+    state = filter;
+  }
+}
+
+/*================== Filtered Tasks Provider =================*/
+@riverpod
+List<Task> filteredTasks(Ref ref) {
+  final tasks = ref.watch(homeProvider).valueOrNull ?? [];
+  final filter = ref.watch(taskFilterStateProvider);
+  final selectedDate = ref.watch(selectedDateProvider);
+
+  final tasksForSelectedDate = tasks.where((task) {
+    return task.startDate.year == selectedDate.year &&
+        task.startDate.month == selectedDate.month &&
+        task.startDate.day == selectedDate.day;
+  }).toList();
+
+  switch (filter) {
+    case TaskFilter.all:
+      return tasksForSelectedDate;
+    case TaskFilter.toDo:
+      return tasksForSelectedDate.where((task) => task.isToDo).toList();
+    case TaskFilter.inProgress:
+      return tasksForSelectedDate.where((task) => task.isInProgress).toList();
+    case TaskFilter.completed:
+      return tasksForSelectedDate.where((task) => task.isCompleted).toList();
+  }
 }

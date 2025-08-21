@@ -47,6 +47,27 @@ class Task with TaskMappable {
     return '${endDate.day}/${endDate.month}/${endDate.year}';
   }
 
+  TimeOfDay get timeOfDay {
+    final parts = time.split(':');
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+  }
+
+  // Helper method to format time for display
+  String get formattedTime {
+    final timeOfDay = this.timeOfDay;
+    final hour = timeOfDay.hourOfPeriod == 0 ? 12 : timeOfDay.hourOfPeriod;
+    final minute = timeOfDay.minute.toString().padLeft(2, '0');
+    final period = timeOfDay.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
+  // Helper method to create time string from TimeOfDay
+  static String timeOfDayToString(TimeOfDay timeOfDay) {
+    final hour = timeOfDay.hour.toString().padLeft(2, '0');
+    final minute = timeOfDay.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
   Color get statusColor {
     switch (status) {
       case TaskStatus.toDo:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
 import 'package:todo_list_app/src/core/extentions/space_extention.dart';
@@ -11,6 +12,7 @@ import 'package:todo_list_app/src/core/view/component/base/text_fields.dart';
 import 'package:todo_list_app/src/feature/home/domain/task.dart';
 import 'package:todo_list_app/src/feature/home/presentation/components/custom_app_bar.dart';
 import 'package:todo_list_app/src/feature/home/presentation/components/prioriy_selector.dart';
+import 'package:todo_list_app/src/feature/home/presentation/providers/home_provider.dart';
 
 class AddTaskScreenCompact extends HookConsumerWidget {
   const AddTaskScreenCompact({super.key});
@@ -93,15 +95,17 @@ class AddTaskScreenCompact extends HookConsumerWidget {
 
     Future<void> submitTask() async {
       if (formKey.currentState!.validate() && fieldsIsValidNotifier.value) {
-        // Here you would save the task with:
-        // - titleController.text
-        // - descriptionController.text
-        // - selectedStartDate.value!
-        // - selectedEndDate.value!
-        // - selectedStatus.value
-        // - timeController.text
-        // - selectedPriority.value
-
+        ref
+            .read(homeProvider.notifier)
+            .addTask(
+              title: titleController.text.trim(),
+              description: descriptionController.text.trim(),
+              startDate: selectedStartDate.value!,
+              endDate: selectedEndDate.value!,
+              status: selectedStatus.value,
+              time: Task.timeOfDayToString(selectedTime.value!),
+              priority: selectedPriority.value,
+            );
         // Clear form after submission
         titleController.clear();
         descriptionController.clear();
@@ -114,6 +118,8 @@ class AddTaskScreenCompact extends HookConsumerWidget {
         selectedStatus.value = TaskStatus.toDo;
         selectedPriority.value = TaskPriority.medium;
         fieldsIsValidNotifier.value = false;
+
+        context.pop();
 
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(

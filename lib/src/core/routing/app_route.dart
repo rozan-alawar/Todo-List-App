@@ -23,7 +23,7 @@ GoRouter goRouter(Ref ref) {
     debugLogDiagnostics: true,
     restorationScopeId: 'router',
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/splash',
+    initialLocation: '/home',
     routes: $appRoutes,
     refreshListenable: listenToRefresh,
   );

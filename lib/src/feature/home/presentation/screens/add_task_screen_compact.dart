@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
-import 'package:todo_list_app/src/core/extentions/space_extention.dart';
-import 'package:todo_list_app/src/core/utils/const/sizes.dart';
-import 'package:todo_list_app/src/core/view/component/base/buttons.dart';
-import 'package:todo_list_app/src/core/view/component/base/label_text_field.dart';
+import 'package:todo_list_app/src/core/services/riverpod/widget_ref_extension.dart';
 import 'package:todo_list_app/src/core/view/component/base/safe_scaffold.dart';
-import 'package:todo_list_app/src/core/view/component/base/text_fields.dart';
 import 'package:todo_list_app/src/feature/home/domain/task.dart';
-import 'package:todo_list_app/src/feature/home/presentation/components/custom_app_bar.dart';
-import 'package:todo_list_app/src/feature/home/presentation/components/prioriy_selector.dart';
+import 'package:todo_list_app/src/feature/home/presentation/components/add_task_form.dart';
 import 'package:todo_list_app/src/feature/home/presentation/providers/home_provider.dart';
 
 class AddTaskScreenCompact extends HookConsumerWidget {
@@ -93,6 +87,15 @@ class AddTaskScreenCompact extends HookConsumerWidget {
       }
     }
 
+    ref.easyListen(
+      homeProvider,
+      handleLoading: true,
+      whenData: (tasks) {},
+      whenError: (error) {
+        return null;
+      },
+    );
+
     Future<void> submitTask() async {
       if (formKey.currentState!.validate() && fieldsIsValidNotifier.value) {
         ref
@@ -106,7 +109,7 @@ class AddTaskScreenCompact extends HookConsumerWidget {
               time: Task.timeOfDayToString(selectedTime.value!),
               priority: selectedPriority.value,
             );
-        // Clear form after submission
+
         titleController.clear();
         descriptionController.clear();
         timeController.clear();
@@ -118,13 +121,11 @@ class AddTaskScreenCompact extends HookConsumerWidget {
         selectedStatus.value = TaskStatus.toDo;
         selectedPriority.value = TaskPriority.medium;
         fieldsIsValidNotifier.value = false;
-
         context.pop();
 
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Task added successfully!')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Task added successfully!')),
+        // );
       }
     }
 
@@ -137,126 +138,23 @@ class AddTaskScreenCompact extends HookConsumerWidget {
         slivers: [
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(Sizes.radius30),
-                ),
-              ),
-              padding: const EdgeInsets.only(
-                top: Sizes.paddingH24,
-                left: Sizes.screenPaddingH24,
-                right: Sizes.screenPaddingH24,
-                bottom: Sizes.textFieldPaddingV14,
-              ),
-              child: Form(
-                key: formKey,
-                onChanged: verifyValidation,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomAppBar(title: "Add New Task"),
-                    20.height,
-
-                    // Title Field
-                    LabelTextField(
-                      label: "Task Title",
-                      child: TaskTitleTextField(
-                        controller: titleController,
-                        fillColor: const Color(0xff1A2230),
-                      ),
-                    ),
-
-                    const SizedBox(height: Sizes.marginV16),
-
-                    // Description Field
-                    LabelTextField(
-                      label: "Description",
-                      child: DescriptionTextField(
-                        controller: descriptionController,
-                        fillColor: const Color(0xff1A2230),
-                      ),
-                    ),
-
-                    const SizedBox(height: Sizes.marginV16),
-
-                    // Time Field
-                    LabelTextField(
-                      label: "Time",
-                      child: TimeTextField(
-                        onTap: selectTime,
-                        timeController: timeController,
-                        selectedTime: selectedTime,
-                      ),
-                    ),
-
-                    const SizedBox(height: Sizes.marginV16),
-
-                    // Date Fields Row
-                    Row(
-                      children: [
-                        // Start Date
-                        Expanded(
-                          child: LabelTextField(
-                            label: "Start Date",
-                            child: DateTextField(
-                              onTap: selectStartDate,
-                              dateController: startDateController,
-                              selectedDate: selectedStartDate,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(width: Sizes.marginH12),
-
-                        // End Date
-                        Expanded(
-                          child: LabelTextField(
-                            label: "End Date",
-                            child: DateTextField(
-                              onTap: selectEndDate,
-                              dateController: endDateController,
-                              selectedDate: selectedEndDate,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: Sizes.marginV16),
-
-                    // Task Priority
-                    LabelTextField(
-                      label: "Priority",
-                      child: TaskPrioritySelector(
-                        selectedPriority: selectedPriority,
-                      ),
-                    ),
-                    const SizedBox(height: Sizes.marginV32),
-                    const Spacer(),
-                    // Submit Button
-                    HookConsumer(
-                      builder: (context, ref, child) {
-                        final fieldsIsValid = useValueListenable(
-                          fieldsIsValidNotifier,
-                        );
-                        return AppButton(
-                          disableButton: !fieldsIsValid,
-                          onPressed: submitTask,
-                          type: AppButtonType.primary,
-                          child: Text(
-                            "Add Task",
-                            style: TextStyles.f16(context).copyWith(
-                              fontWeight: FontStyles.fontWeightMedium,
-                              color: fieldsIsValid ? Colors.white : null,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+            child: AddTaskForm(
+              formKey: formKey,
+              titleController: titleController,
+              descriptionController: descriptionController,
+              timeController: timeController,
+              selectedTime: selectedTime,
+              startDateController: startDateController,
+              selectedStartDate: selectedStartDate,
+              endDateController: endDateController,
+              selectedEndDate: selectedEndDate,
+              selectedPriority: selectedPriority,
+              fieldsIsValidNotifier: fieldsIsValidNotifier,
+              verifyValidation: verifyValidation,
+              selectTime: selectTime,
+              selectStartDate: selectStartDate,
+              selectEndDate: selectEndDate,
+              submitTask: submitTask,
             ),
           ),
         ],

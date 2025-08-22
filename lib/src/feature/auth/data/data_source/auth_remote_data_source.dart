@@ -41,6 +41,7 @@ class AuthRemoteDataSource {
   // =====================================================
   //                      Login
   // =====================================================
+
   Future<UserApp> login(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -65,6 +66,7 @@ class AuthRemoteDataSource {
   // =====================================================
   //                      Register
   // =====================================================
+
   Future<UserApp> register(RegisterParams params) async {
     try {
       UserCredential userCredential = await _auth
@@ -88,5 +90,20 @@ class AuthRemoteDataSource {
     } catch (e) {
       throw UnknownFailure(e.toString());
     }
+  }
+
+  // =====================================================
+  //                   Current User
+  // =====================================================
+  UserApp? getCurrentUser() {
+    final user = _auth.currentUser;
+    return _userFromFirebase(user);
+  }
+
+  // =====================================================
+  //                   Auth State Stream
+  // =====================================================
+  Stream<UserApp?> get authStateChanges {
+    return _auth.authStateChanges().map(_userFromFirebase);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_app/src/feature/home/data/data_source/task_remote_data_source.dart';
 import 'package:todo_list_app/src/feature/home/domain/task.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,6 +12,9 @@ class Home extends _$Home {
   FutureOr<List<Task>> build() {
     return [];
   }
+
+  TaskRemoteDataSource get taskRemoteDataSource =>
+      ref.read(taskRemoteDataSourceProvider);
 
   void addTask({
     required String title,
@@ -37,12 +41,10 @@ class Home extends _$Home {
       );
 
       final currentTasks = state.valueOrNull ?? [];
-      final updatedTasks = [...currentTasks, newTask];
 
-      // await ref
-      //     .read(sharedPrefFacadeProvider)
-      //     .saveData(key: "tasks", value: updatedTasks);
+      final createdTask = await taskRemoteDataSource.addTask(newTask);
 
+      final updatedTasks = [...currentTasks, createdTask];
       return updatedTasks;
     });
   }

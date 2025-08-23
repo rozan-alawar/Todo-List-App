@@ -264,8 +264,8 @@ class TaskTitleTextField extends StatelessWidget {
       controller: controller,
       enabled: enabled,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (email) =>
-          ValidatorFields.isValidTaskTitle(context)?.call(email?.trim()),
+      validator: (task) =>
+          ValidatorFields.isValidTaskTitle(context)?.call(task?.trim()),
       style: !filled
           ? TextStyles.f16(
               context,

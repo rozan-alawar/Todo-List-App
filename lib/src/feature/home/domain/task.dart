@@ -26,6 +26,7 @@ class Task with TaskMappable {
     required this.endDate,
     required this.status,
     required this.time,
+    required this.userId,
     required this.priority,
   });
 
@@ -36,6 +37,7 @@ class Task with TaskMappable {
   final DateTime endDate;
   final TaskStatus status;
   final String time;
+  final String userId;
   final TaskPriority priority;
 
   //========== Helper methods ================
@@ -50,15 +52,6 @@ class Task with TaskMappable {
   TimeOfDay get timeOfDay {
     final parts = time.split(':');
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-  }
-
-  // Helper method to format time for display
-  String get formattedTime {
-    final timeOfDay = this.timeOfDay;
-    final hour = timeOfDay.hourOfPeriod == 0 ? 12 : timeOfDay.hourOfPeriod;
-    final minute = timeOfDay.minute.toString().padLeft(2, '0');
-    final period = timeOfDay.period == DayPeriod.am ? 'AM' : 'PM';
-    return '$hour:$minute $period';
   }
 
   // Helper method to create time string from TimeOfDay

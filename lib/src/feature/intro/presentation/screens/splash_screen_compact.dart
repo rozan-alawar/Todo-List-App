@@ -17,7 +17,6 @@ class SplashScreenCompact extends StatelessWidget {
         children: [
           Image.asset(
             AppAssets.ASSETS_IMAGES_SPLASH_PNG,
-            // height: 450,
             width: double.infinity,
             fit: BoxFit.fill,
           ),
@@ -54,7 +53,7 @@ class SplashScreenCompact extends StatelessWidget {
               ),
             ),
           ),
-          80.height,
+          60.height,
         ],
       ),
     );

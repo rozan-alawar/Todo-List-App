@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_app/src/feature/auth/presentation/providers/auth_providers.dart';
 import 'package:todo_list_app/src/feature/home/data/data_source/task_remote_data_source.dart';
 import 'package:todo_list_app/src/feature/home/domain/task.dart';
 import 'package:uuid/uuid.dart';
@@ -9,8 +12,17 @@ part 'home_provider.g.dart';
 @riverpod
 class Home extends _$Home {
   @override
-  FutureOr<List<Task>> build() {
-    return [];
+  FutureOr<List<Task>> build() async {
+    final authState = ref.watch(loginStateProvider).value!;
+    return authState.fold(() => <Task>[], (user) async {
+      final tasks = await ref
+          .read(taskRemoteDataSourceProvider)
+          .getUserTasks(user.user.id);
+
+      log("==================================== tasks=====================");
+      log(tasks.toString());
+      return tasks;
+    });
   }
 
   TaskRemoteDataSource get taskRemoteDataSource =>
@@ -25,42 +37,66 @@ class Home extends _$Home {
     required String time,
     required TaskPriority priority,
   }) async {
-    state = const AsyncLoading();
+    final loginState = ref.read(loginStateProvider).value!;
 
-    state = await AsyncValue.guard(() async {
-      const uuid = Uuid();
-      final newTask = Task(
-        id: uuid.v4(),
-        title: title,
-        description: description,
-        startDate: startDate,
-        endDate: endDate,
-        status: status,
-        time: time,
-        priority: priority,
-      );
+    loginState.fold(() => throw Exception('User not authenticated'), (
+      user,
+    ) async {
+      state = const AsyncLoading();
 
-      final currentTasks = state.valueOrNull ?? [];
+      state = await AsyncValue.guard(() async {
+        const uuid = Uuid();
+        final newTask = Task(
+          id: uuid.v4(),
+          title: title,
+          description: description,
+          startDate: startDate,
+          endDate: endDate,
+          status: status,
+          time: time,
+          priority: priority,
+          userId: user.user.id,
+        );
 
-      final createdTask = await taskRemoteDataSource.addTask(newTask);
+        final currentTasks = state.valueOrNull ?? [];
 
-      final updatedTasks = [...currentTasks, createdTask];
-      return updatedTasks;
+        final createdTask = await taskRemoteDataSource.addTask(newTask);
+
+        final updatedTasks = [...currentTasks, createdTask];
+        return updatedTasks;
+      });
     });
   }
 
-  void updateTaskStatus({
-    required Task task,
-    required TaskStatus status,
-  }) async {
+  void getTasks() async {
+    ref.read(loginStateProvider).value!.fold(
+      () => throw Exception('User not authenticated'),
+      (user) async {
+        state = const AsyncLoading();
+        state = await AsyncValue.guard(() async {
+          return taskRemoteDataSource.getUserTasks(user.user.id);
+        });
+      },
+    );
+  }
+
+  void updateTask({required Task updatedTask}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final currentTasks = state.valueOrNull ?? [];
-      final updatedTasks = [
-        ...currentTasks.map(
-          (e) => e.id == task.id ? task.copyWith(status: status) : e,
-        ),
-      ];
+
+      final updatedTaskFromServer = await taskRemoteDataSource.updateTask(
+        updatedTask,
+      );
+
+      log("Task updated successfully");
+
+      final updatedTasks = currentTasks
+          .map(
+            (task) => task.id == updatedTask.id ? updatedTaskFromServer : task,
+          )
+          .toList();
+
       return updatedTasks;
     });
   }

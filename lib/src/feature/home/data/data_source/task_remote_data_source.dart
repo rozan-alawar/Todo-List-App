@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -34,6 +36,23 @@ class TaskRemoteDataSource {
     return TaskMapper.fromJson({...processedData, 'id': doc.id});
   }
 
+  Map<String, dynamic> _taskToFirestoreData(Task task) {
+    final data = task.toJson();
+
+    final processedData = <String, dynamic>{};
+    for (final entry in data.entries) {
+      if (entry.value is DateTime) {
+        processedData[entry.key] = Timestamp.fromDate(entry.value as DateTime);
+      } else {
+        processedData[entry.key] = entry.value;
+      }
+    }
+
+    processedData.remove('id');
+
+    return processedData;
+  }
+
   // =====================================================
   //                    Add Task
   // =====================================================
@@ -63,9 +82,30 @@ class TaskRemoteDataSource {
           .where('userId', isEqualTo: userId)
           .get();
 
+      log(querySnapshot.toString());
+
       return querySnapshot.docs.map(_taskFromDocument).toList();
     } catch (e) {
       throw UnknownFailure('Failed to get tasks: ${e.toString()}');
+    }
+  }
+
+  // =====================================================
+  //                    Update Task
+  // =====================================================
+
+  Future<Task> updateTask(Task task) async {
+    try {
+      final taskData = _taskToFirestoreData(task);
+
+      await _firestore
+          .collection(_tasksCollection)
+          .doc(task.id)
+          .update(taskData);
+
+      return task;
+    } catch (e) {
+      throw UnknownFailure('Failed to update task: ${e.toString()}');
     }
   }
 }

@@ -14,9 +14,6 @@ class ValidatorFields {
   static String? Function(String?)? isValidTaskTitle(BuildContext context) =>
       FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: "Task title is required"),
-        FormBuilderValidators.fileName(
-          errorText: "Enter a valid email address",
-        ),
       ]);
 
   static String? Function(String?)? isValidDescription(BuildContext context) =>

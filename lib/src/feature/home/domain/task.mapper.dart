@@ -138,6 +138,8 @@ class TaskMapper extends ClassMapperBase<Task> {
   static const Field<Task, TaskStatus> _f$status = Field('status', _$status);
   static String _$time(Task v) => v.time;
   static const Field<Task, String> _f$time = Field('time', _$time);
+  static String _$userId(Task v) => v.userId;
+  static const Field<Task, String> _f$userId = Field('userId', _$userId);
   static TaskPriority _$priority(Task v) => v.priority;
   static const Field<Task, TaskPriority> _f$priority =
       Field('priority', _$priority);
@@ -151,6 +153,7 @@ class TaskMapper extends ClassMapperBase<Task> {
     #endDate: _f$endDate,
     #status: _f$status,
     #time: _f$time,
+    #userId: _f$userId,
     #priority: _f$priority,
   };
 
@@ -163,6 +166,7 @@ class TaskMapper extends ClassMapperBase<Task> {
         endDate: data.dec(_f$endDate),
         status: data.dec(_f$status),
         time: data.dec(_f$time),
+        userId: data.dec(_f$userId),
         priority: data.dec(_f$priority));
   }
 
@@ -220,6 +224,7 @@ abstract class TaskCopyWith<$R, $In extends Task, $Out>
       DateTime? endDate,
       TaskStatus? status,
       String? time,
+      String? userId,
       TaskPriority? priority});
   TaskCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -239,6 +244,7 @@ class _TaskCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Task, $Out>
           DateTime? endDate,
           TaskStatus? status,
           String? time,
+          String? userId,
           TaskPriority? priority}) =>
       $apply(FieldCopyWithData({
         if (id != null) #id: id,
@@ -248,6 +254,7 @@ class _TaskCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Task, $Out>
         if (endDate != null) #endDate: endDate,
         if (status != null) #status: status,
         if (time != null) #time: time,
+        if (userId != null) #userId: userId,
         if (priority != null) #priority: priority
       }));
   @override
@@ -259,6 +266,7 @@ class _TaskCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Task, $Out>
       endDate: data.get(#endDate, or: $value.endDate),
       status: data.get(#status, or: $value.status),
       time: data.get(#time, or: $value.time),
+      userId: data.get(#userId, or: $value.userId),
       priority: data.get(#priority, or: $value.priority));
 
   @override

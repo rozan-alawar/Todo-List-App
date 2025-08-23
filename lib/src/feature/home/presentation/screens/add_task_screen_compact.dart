@@ -90,7 +90,9 @@ class AddTaskScreenCompact extends HookConsumerWidget {
     ref.easyListen(
       homeProvider,
       handleLoading: true,
-      whenData: (tasks) {},
+      whenData: (tasks) {
+        context.pop();
+      },
       whenError: (error) {
         return null;
       },
@@ -121,6 +123,7 @@ class AddTaskScreenCompact extends HookConsumerWidget {
         selectedStatus.value = TaskStatus.toDo;
         selectedPriority.value = TaskPriority.medium;
         fieldsIsValidNotifier.value = false;
+
         context.pop();
 
         // ScaffoldMessenger.of(context).showSnackBar(

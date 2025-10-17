@@ -19,8 +19,6 @@ class Home extends _$Home {
           .read(taskRemoteDataSourceProvider)
           .getUserTasks(user.user.id);
 
-      log("==================================== tasks=====================");
-      log(tasks.toString());
       return tasks;
     });
   }

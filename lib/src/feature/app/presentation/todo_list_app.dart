@@ -19,7 +19,6 @@ class TodoListApp extends HookConsumerWidget {
       title: appTitle,
       routerConfig: router,
       restorationScopeId: 'app',
-
       debugShowCheckedModeBanner: false,
       theme: themeMode.getThemeData("LexendDeca"),
       builder: (_, child) {

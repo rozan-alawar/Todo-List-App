@@ -10,10 +10,12 @@ class CustomAppBar extends StatelessWidget {
     required this.title,
     this.showBackButton = true,
     this.action,
+    this.leading,
   });
   final String title;
   final bool showBackButton;
   final List<Widget>? action;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class CustomAppBar extends StatelessWidget {
                   child: SvgPicture.asset(AppAssets.ASSETS_ICONS_ARROW_SVG),
                 ),
               )
-            : SizedBox.shrink(),
+            : (leading ?? SizedBox.shrink()),
         Spacer(),
         Text(
           title,

@@ -2,7 +2,7 @@ part of '../app_route.dart';
 
 @TypedGoRoute<LoginRoute>(
   path: '/login',
-  routes: [TypedGoRoute<RegisterRoute>(path: 'register')],
+  routes: [TypedGoRoute<RegisterRoute>(path: '/register')],
 )
 class LoginRoute extends GoRouteData {
   const LoginRoute();

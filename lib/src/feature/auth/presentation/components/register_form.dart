@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
+import 'package:todo_list_app/src/core/routing/app_route.dart';
 import 'package:todo_list_app/src/core/utils/const/sizes.dart';
 import 'package:todo_list_app/src/core/view/component/base/buttons.dart';
 import 'package:todo_list_app/src/core/view/component/base/label_text_field.dart';
@@ -108,7 +108,7 @@ class RegisterForm extends StatelessWidget {
             ),
             const SizedBox(height: Sizes.marginV24),
             AppButton(
-              onPressed: () => context.go('/login'),
+              onPressed: () => LoginRoute().go(context),
 
               type: AppButtonType.outline,
               child: Padding(

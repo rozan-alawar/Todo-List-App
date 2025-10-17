@@ -23,7 +23,7 @@ final filteredTasksProvider = AutoDisposeProvider<List<Task>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FilteredTasksRef = AutoDisposeProviderRef<List<Task>>;
-String _$homeHash() => r'c2bad1f5359a3b183da43040e1606099614ef7d5';
+String _$homeHash() => r'e203b9325cc5512d5bf595390a8c2ddabe9c7190';
 
 /// See also [Home].
 @ProviderFor(Home)

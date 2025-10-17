@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_app/src/core/services/local_db/shared_preferences_facade.dart';
 import 'package:todo_list_app/src/feature/auth/presentation/screens/register_screen.dart';
 import 'package:todo_list_app/src/feature/home/presentation/screens/add_task_screen.dart';
 import 'package:todo_list_app/src/feature/home/presentation/screens/home_screen.dart';
@@ -19,6 +20,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 @riverpod
 GoRouter goRouter(Ref ref) {
   final listenToRefresh = ValueNotifier<bool?>(null);
+  final sharedPrefs = ref.watch(sharedPreferencesServiceProvider);
 
   final appRouter = GoRouter(
     debugLogDiagnostics: true,
@@ -27,6 +29,22 @@ GoRouter goRouter(Ref ref) {
     initialLocation: '/splash',
     routes: $appRoutes,
     refreshListenable: listenToRefresh,
+    redirect: (BuildContext context, GoRouterState state) async {
+      final isLoggingIn =
+          state.matchedLocation == '/login' ||
+          state.matchedLocation == '/register';
+
+      final isLoggedIn = await sharedPrefs.isLoggedIn();
+      if (!isLoggedIn) {
+        return isLoggingIn ? null : '/login';
+      }
+
+      if (isLoggingIn) {
+        return '/home';
+      }
+
+      return null;
+    },
   );
 
   ref.onDispose(() {

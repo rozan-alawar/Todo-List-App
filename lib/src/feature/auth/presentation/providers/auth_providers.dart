@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_list_app/src/core/services/local_db/shared_preferences_facade.dart';
 import 'package:todo_list_app/src/feature/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:todo_list_app/src/feature/auth/domain/register_params.dart';
 
-import '../../../../core/services/riverpod/widget_ref_extension.dart';
 import '../../domain/user_app_model.dart';
 
 part 'auth_providers.g.dart';
@@ -15,7 +15,15 @@ part 'auth_providers.g.dart';
 @riverpod
 class LoginState extends _$LoginState {
   @override
-  FutureOr<Option<({UserApp user})>> build() {
+  FutureOr<Option<({UserApp user})>> build() async {
+    final sharedPrefs = ref.read(sharedPreferencesServiceProvider);
+
+    final isLoggedIn = await sharedPrefs.isLoggedIn();
+    if (!isLoggedIn) return None();
+
+    final savedUser = await sharedPrefs.getUser();
+    if (savedUser != null) return Some((user: savedUser));
+
     return const None();
   }
 
@@ -25,11 +33,33 @@ class LoginState extends _$LoginState {
   Future<void> login(String email, String password) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
+      final sharedPrefs = ref.read(sharedPreferencesServiceProvider);
       final user = await authRemoteDataSource.login(email, password);
+
+      await sharedPrefs.saveUser(user);
       return Some((user: user));
     });
   }
 }
+
+// Future<void> logout() async {
+//   final sharedPrefs = ref.read(sharedPreferencesServiceProvider);
+//   final authDataSource = ref.read(authRemoteDataSourceProvider);
+
+//   try {
+//     // Sign out from Firebase
+//     await authDataSource.logout();
+
+//     // Clear user data from SharedPreferences
+//     await sharedPrefs.clearUser();
+
+//     // Update state to null (logged out)
+//     state = const AsyncData(null);
+//   } catch (e, stackTrace) {
+//     state = AsyncError(e, stackTrace);
+//     rethrow;
+//   }
+// }
 
 /*================== Register =================*/
 @riverpod
@@ -42,7 +72,12 @@ class RegisterState extends _$RegisterState {
   Future<void> register(RegisterParams params) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(authRemoteDataSourceProvider).register(params);
+      final sharedPrefs = ref.read(sharedPreferencesServiceProvider);
+
+      final user = await ref
+          .read(authRemoteDataSourceProvider)
+          .register(params);
+      await sharedPrefs.saveUser(user);
       return const Some(unit);
     });
   }
@@ -70,7 +105,6 @@ class VerifyForgetPasswordOtpState extends _$VerifyForgetPasswordOtpState {
 class ResetPasswordState extends _$ResetPasswordState {
   @override
   FutureOr<Option<Unit>> build() {
-    ref.keepAliveUntilNoListeners();
     return const None();
   }
 

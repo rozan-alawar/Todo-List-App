@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo_list_app/src/core/utils/app_logger/app_logger.dart';
 import 'package:todo_list_app/src/core/view/component/base/indicator.dart';
 import 'package:todo_list_app/src/core/view/component/retry_component.dart';
 
@@ -12,7 +11,6 @@ extension AsyncValueExtension<T> on AsyncValue<T> {
     void Function()? onRetry,
     StackTrace? stackTrace,
   ) {
-    printer.f('From AsyncError', error: error, stackTrace: stackTrace);
     return ScreenRetry(onRetry: onRetry, description: description);
   }
 

@@ -63,7 +63,7 @@ final verifyForgetPasswordOtpStateProvider =
 typedef _$VerifyForgetPasswordOtpState =
     AutoDisposeAsyncNotifier<Option<({String email, String otp})>>;
 String _$resetPasswordStateHash() =>
-    r'3889f7ca61373c78870e882401468dbdef7834bc';
+    r'a3a0961372dc46f0fedc0afd63033afba6a50aa2';
 
 /// See also [ResetPasswordState].
 @ProviderFor(ResetPasswordState)

@@ -6,12 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:todo_list_app/src/core/config/env/flavor.dart';
-import 'package:todo_list_app/src/core/exceptions/future_extensions.dart';
 import 'package:todo_list_app/src/core/services/local_db/shared_preferences_facade.dart';
-import 'package:todo_list_app/src/core/services/riverpod/provider_observers.dart';
 import 'package:todo_list_app/src/feature/app/presentation/todo_list_app.dart';
-
-import '../../../core/utils/app_logger/app_logger.dart';
 
 final log = Logger('Bootstrap init');
 
@@ -19,14 +15,12 @@ final class Bootstrap {
   static Future<ProviderContainer> init() async {
     final binding = WidgetsFlutterBinding.ensureInitialized();
 
-    initLogger();
-
     // Setup Riverpod observer
-    final container = ProviderContainer(observers: [ProviderLogger()]);
+    final container = ProviderContainer();
 
     await _initFirebase(container);
 
-    await container.read(sharedPrefAsyncProvider.future).suppressError();
+    container.read(sharedPreferencesServiceProvider);
     // This Prevent closing native splash screen until we finish warming-up custom splash images.
     // App layout will be built but not displayed.
     binding.deferFirstFrame();
@@ -54,12 +48,6 @@ final class Bootstrap {
       ),
     );
   }
-}
-
-void initLogger() {
-  Logger.root.level = Level.ALL;
-  hierarchicalLoggingEnabled = true;
-  log.onRecord.listen((record) => record.logMessage());
 }
 
 Future<void> _initFirebase(ProviderContainer container) async {

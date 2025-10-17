@@ -15,40 +15,51 @@ class SplashScreenCompact extends StatelessWidget {
       safeTop: true,
       body: Column(
         children: [
-          Image.asset(
-            AppAssets.ASSETS_IMAGES_SPLASH_PNG,
-            width: double.infinity,
-            fit: BoxFit.fill,
+          Semantics(
+            label: 'Splash screen background',
+            child: Image.asset(
+              AppAssets.ASSETS_IMAGES_SPLASH_PNG,
+              width: double.infinity,
+              fit: BoxFit.fill,
+            ),
           ),
-          Spacer(),
-          Text(
-            'Task Management &\n To-Do List',
-            textAlign: TextAlign.center,
 
-            style: TextStyles.f24(
-              context,
-            ).copyWith(fontWeight: FontStyles.fontWeightBold),
+          const Spacer(),
+
+          Semantics(
+            header: true,
+            child: Text(
+              'Task Management &\n To-Do List',
+              textAlign: TextAlign.center,
+              style: TextStyles.f24(
+                context,
+              ).copyWith(fontWeight: FontStyles.fontWeightBold),
+            ),
           ),
           30.height,
 
           Text(
             "This productive tool is designed to help\nyou better manage your task \nproject-wise conveniently!",
             textAlign: TextAlign.center,
-
             style: TextStyles.f14(context),
           ),
           40.height,
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: AppButton(
-              onPressed: () => context.go('/login'),
-              roundCorner: 16,
-              type: AppButtonType.primary,
-              child: Text(
-                'Let’s Start',
-                style: TextStyles.f16(context).copyWith(
-                  fontWeight: FontStyles.fontWeightMedium,
-                  color: Colors.white,
+            child: Semantics(
+              button: true,
+              label: 'Start using the app',
+              child: AppButton(
+                onPressed: () => context.go('/login'),
+                roundCorner: 16,
+                type: AppButtonType.primary,
+                child: Text(
+                  'Let’s Start',
+                  style: TextStyles.f16(context).copyWith(
+                    fontWeight: FontStyles.fontWeightMedium,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

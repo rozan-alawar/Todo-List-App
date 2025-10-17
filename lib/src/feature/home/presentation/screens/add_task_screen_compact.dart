@@ -125,6 +125,7 @@ class AddTaskScreenCompact extends HookConsumerWidget {
         fieldsIsValidNotifier.value = false;
 
         context.pop();
+        context.pop();
 
         // ScaffoldMessenger.of(context).showSnackBar(
         //   const SnackBar(content: Text('Task added successfully!')),

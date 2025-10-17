@@ -1,93 +1,53 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'dart:convert';
+
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_list_app/src/feature/auth/domain/user_app_model.dart';
 
-import '../../exceptions/app_error_extension.dart';
+final sharedPreferencesServiceProvider = Provider<SharedPreferencesService>((
+  ref,
+) {
+  return SharedPreferencesService();
+});
 
-part 'shared_preferences_facade.g.dart';
+class SharedPreferencesService {
+  static const _userKey = 'user_data';
+  static const _isLoggedInKey = 'is_logged_in';
 
-@Riverpod(keepAlive: true)
-Future<SharedPreferences> sharedPrefAsync(SharedPrefAsyncRef ref) =>
-    SharedPreferences.getInstance();
-
-@Riverpod(keepAlive: true)
-SharedPreferences _sharedPref(_SharedPrefRef ref) =>
-    ref.watch(sharedPrefAsyncProvider).requireValue;
-
-@Riverpod(keepAlive: true)
-SharedPrefFacade sharedPrefFacade(SharedPrefFacadeRef ref) =>
-    SharedPrefFacade(ref.watch(_sharedPrefProvider));
-
-/// A class that provides access to the shared preferences instance.
-class SharedPrefFacade {
-  SharedPrefFacade(this.sharedPref);
-  final SharedPreferences sharedPref;
-
-  Future<bool> saveData({
-    required String key,
-    required Object value,
-  }) {
-    return _futureErrorHandler(() async {
-      return switch (value) {
-        final String value => sharedPref.setString(key, value),
-        final int value => sharedPref.setInt(key, value),
-        final double value => sharedPref.setDouble(key, value),
-        final bool value => sharedPref.setBool(key, value),
-        final List<String> value => sharedPref.setStringList(key, value),
-        _ => throw UnsupportedError(
-            'The type of this value is not supported. '
-            'All supported types are: String | int | double | bool | List<String>.',
-          ),
-      };
-    });
+  // Save user data
+  Future<void> saveUser(UserApp user) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userKey, jsonEncode(user.toJson()));
+    await prefs.setBool(_isLoggedInKey, true);
   }
 
-  T? restoreData<T>(String key) {
-    return _errorHandler(() {
-      return switch (T) {
-        const (String) => sharedPref.getString(key) as T?,
-        const (int) => sharedPref.getInt(key) as T?,
-        const (double) => sharedPref.getDouble(key) as T?,
-        const (bool) => sharedPref.getBool(key) as T?,
-        const (List<String>) => sharedPref.getStringList(key) as T?,
-        _ => throw UnsupportedError(
-            'The type of this value is not supported. '
-            'All supported types are: String | int | double | bool | List<String>.',
-          )
-      };
-    });
+  // Get saved user data
+  Future<UserApp?> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString(_userKey);
+
+    if (userJson != null) {
+      try {
+        return UserAppMapper.fromJson(jsonDecode(userJson));
+      } catch (e) {
+        print('Error parsing user data: $e');
+        return null;
+      }
+    }
+
+    return null;
   }
 
-  Future<bool> clearAll() async {
-    return _futureErrorHandler(
-      () async {
-        return sharedPref.clear();
-      },
-    );
+  // Check if user is logged in
+  Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_isLoggedInKey) ?? false;
   }
 
-  Future<bool> clearKey(String key) async {
-    return _futureErrorHandler(
-      () async {
-        return sharedPref.remove(key);
-      },
-    );
-  }
-}
-
-Future<T> _futureErrorHandler<T>(Future<T> Function() body) async {
-  try {
-    return await body.call();
-  } catch (error, st) {
-    final e = error.localErrorToCacheException(st);
-    throw Error.throwWithStackTrace(e, st);
-  }
-}
-
-T _errorHandler<T>(T Function() body) {
-  try {
-    return body.call();
-  } catch (error, st) {
-    final e = error.localErrorToCacheException(st);
-    throw Error.throwWithStackTrace(e, st);
+  // Clear user data on logout
+  Future<void> clearUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userKey);
+    await prefs.setBool(_isLoggedInKey, false);
   }
 }

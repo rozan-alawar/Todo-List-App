@@ -14,7 +14,7 @@ RouteBase get $loginRoute => GoRouteData.$route(
   factory: $LoginRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'register',
+      path: '/register',
 
       factory: $RegisterRouteExtension._fromState,
     ),
@@ -39,7 +39,7 @@ extension $LoginRouteExtension on LoginRoute {
 extension $RegisterRouteExtension on RegisterRoute {
   static RegisterRoute _fromState(GoRouterState state) => const RegisterRoute();
 
-  String get location => GoRouteData.$location('/login/register');
+  String get location => GoRouteData.$location('/register');
 
   void go(BuildContext context) => context.go(location);
 
@@ -78,7 +78,7 @@ RouteBase get $homeRoute => GoRouteData.$route(
   factory: $HomeRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'add-task',
+      path: '/add-task',
 
       factory: $AddTaskRouteExtension._fromState,
     ),
@@ -103,7 +103,7 @@ extension $HomeRouteExtension on HomeRoute {
 extension $AddTaskRouteExtension on AddTaskRoute {
   static AddTaskRoute _fromState(GoRouterState state) => const AddTaskRoute();
 
-  String get location => GoRouteData.$location('/home/add-task');
+  String get location => GoRouteData.$location('/add-task');
 
   void go(BuildContext context) => context.go(location);
 

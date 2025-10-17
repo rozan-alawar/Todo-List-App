@@ -12,7 +12,7 @@ extension AppErrorExtension on Object? {
         LocalAppException() => error.cacheErrorMessage(context),
       };
     }
-    return "unknownError";
+    return error.toString();
   }
 
   bool get shouldSkipError {

@@ -1,14 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:todo_list_app/src/core/config/theme/app_color/extensions_color.dart';
 
 class LoadingAppIndicator extends StatelessWidget {
-  const LoadingAppIndicator({
-    super.key,
-    this.size = 24,
-    this.indicatorColor,
-  });
+  const LoadingAppIndicator({super.key, this.size = 24, this.indicatorColor});
   final double size;
   final Color? indicatorColor;
 
@@ -20,10 +16,10 @@ class LoadingAppIndicator extends StatelessWidget {
         width: size,
         child: Platform.isAndroid
             ? CupertinoActivityIndicator(
-                color: indicatorColor,
+                color: appSwitcherColors(context).primaryColor,
               )
-            : CircularProgressIndicator(
-                color: indicatorColor,
+            : CupertinoActivityIndicator(
+                color: appSwitcherColors(context).primaryColor,
               ),
       ),
     );

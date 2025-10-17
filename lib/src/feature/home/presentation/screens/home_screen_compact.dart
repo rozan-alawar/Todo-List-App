@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_list_app/src/core/config/theme/styles/styles.dart';
 import 'package:todo_list_app/src/core/extentions/space_extention.dart';
 import 'package:todo_list_app/src/core/extentions/when_ex.dart';
 import 'package:todo_list_app/src/core/utils/const/sizes.dart';
 import 'package:todo_list_app/src/core/view/component/base/safe_scaffold.dart';
+import 'package:todo_list_app/src/feature/auth/presentation/screens/login_screen.dart';
 import 'package:todo_list_app/src/feature/home/domain/task.dart';
 import 'package:todo_list_app/src/feature/home/presentation/components/custom_app_bar.dart';
 import 'package:todo_list_app/src/feature/home/presentation/components/task_card.dart';
 import 'package:todo_list_app/src/feature/home/presentation/components/task_filter_tabs.dart';
 import 'package:todo_list_app/src/feature/home/presentation/providers/home_provider.dart';
+import 'package:todo_list_app/src/feature/home/presentation/screens/add_task_screen.dart';
+import 'package:todo_list_app/src/feature/profile/presentation/pages/profile_screen.dart';
 
 class HomeScreenCompact extends HookConsumerWidget {
   const HomeScreenCompact({super.key});
@@ -30,7 +32,6 @@ class HomeScreenCompact extends HookConsumerWidget {
         safeBottom: true,
         body: tasks.whenSuccessInSliver(
           data: (allTasks) {
-            // Filter tasks based on selected filter
             List<Task> filteredTasks = allTasks;
             switch (selectedFilterIndex.value) {
               case 1:
@@ -59,7 +60,30 @@ class HomeScreenCompact extends HookConsumerWidget {
                 SliverList(
                   delegate: SliverChildListDelegate.fixed([
                     10.height,
-                    CustomAppBar(title: "Home", showBackButton: false),
+                    CustomAppBar(
+                      leading: IconButton(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileScreen(),
+                          ),
+                        ),
+                        icon: Icon(Icons.person_2_rounded),
+                      ),
+                      title: "Home",
+                      showBackButton: false,
+                      action: [
+                        IconButton(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(),
+                            ),
+                          ),
+                          icon: Icon(Icons.logout),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: Sizes.paddingH24),
 
                     TaskFilterTabs(
@@ -146,7 +170,10 @@ class HomeScreenCompact extends HookConsumerWidget {
           onErrorMessage: "Error Occurred While Fetching Data!",
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => context.go('/home/add-task'),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddTaskScreen()),
+          ),
           child: const Icon(Icons.add, color: Colors.white),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

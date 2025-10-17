@@ -43,24 +43,18 @@ class AuthRemoteDataSource {
   // =====================================================
 
   Future<UserApp> login(String email, String password) async {
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      final user = _userFromFirebase(userCredential.user);
+    final user = _userFromFirebase(userCredential.user);
 
-      if (user == null) {
-        throw const UnknownFailure('Failed to sign in');
-      }
-
-      return user;
-    } on FirebaseAuthException catch (e) {
-      throw FirebaseConfig.handleFirebaseAuthException(e);
-    } catch (e) {
-      throw UnknownFailure(e.toString());
+    if (user == null) {
+      throw const UnknownFailure('Failed to sign in');
     }
+
+    return user;
   }
 
   // =====================================================
@@ -68,28 +62,21 @@ class AuthRemoteDataSource {
   // =====================================================
 
   Future<UserApp> register(RegisterParams params) async {
-    try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(
-            email: params.email,
-            password: params.password,
-          );
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      email: params.email,
+      password: params.password,
+    );
 
-      final displayName = "${params.firstName} ${params.lastName}".trim();
-      await userCredential.user?.updateDisplayName(displayName);
+    final displayName = "${params.firstName} ${params.lastName}".trim();
+    await userCredential.user?.updateDisplayName(displayName);
 
-      final user = _userFromFirebase(userCredential.user);
+    final user = _userFromFirebase(userCredential.user);
 
-      if (user == null) {
-        throw const UnknownFailure('Failed to create account');
-      }
-
-      return user;
-    } on FirebaseAuthException catch (e) {
-      throw FirebaseConfig.handleFirebaseAuthException(e);
-    } catch (e) {
-      throw UnknownFailure(e.toString());
+    if (user == null) {
+      throw const UnknownFailure('Failed to create account');
     }
+
+    return user;
   }
 
   // =====================================================

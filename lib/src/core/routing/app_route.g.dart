@@ -119,7 +119,7 @@ extension $AddTaskRouteExtension on AddTaskRoute {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'1be655d8adff4f82141487623c015d6be2e265c6';
+String _$goRouterHash() => r'4047a95dd647ce04dc94ef25eb4a806cb16b2951';
 
 /// See also [goRouter].
 @ProviderFor(goRouter)

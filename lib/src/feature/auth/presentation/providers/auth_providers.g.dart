@@ -6,7 +6,7 @@ part of 'auth_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginStateHash() => r'4f670f8735faf419c63d887dd944e5a5058b93e5';
+String _$loginStateHash() => r'288d0a7dfdc9ea383d8f761d9897f10db7e33cf7';
 
 /// See also [LoginState].
 @ProviderFor(LoginState)
@@ -25,7 +25,7 @@ final loginStateProvider =
     );
 
 typedef _$LoginState = AutoDisposeAsyncNotifier<Option<({UserApp user})>>;
-String _$registerStateHash() => r'57d27de0ae3913af0446f49af8e7e4ca3aa76443';
+String _$registerStateHash() => r'11c6809c62d049faa88704ed85e5b8713ff04e16';
 
 /// See also [RegisterState].
 @ProviderFor(RegisterState)
@@ -41,43 +41,21 @@ final registerStateProvider =
     );
 
 typedef _$RegisterState = AutoDisposeAsyncNotifier<Option<Unit>>;
-String _$verifyForgetPasswordOtpStateHash() =>
-    r'25ce0084be5cef23627c05d93231f1b2574442a9';
+String _$logoutStateHash() => r'78034894da326b1371b31395c99a18f4ef51f276';
 
-/// See also [VerifyForgetPasswordOtpState].
-@ProviderFor(VerifyForgetPasswordOtpState)
-final verifyForgetPasswordOtpStateProvider =
-    AutoDisposeAsyncNotifierProvider<
-      VerifyForgetPasswordOtpState,
-      Option<({String email, String otp})>
-    >.internal(
-      VerifyForgetPasswordOtpState.new,
-      name: r'verifyForgetPasswordOtpStateProvider',
+/// See also [LogoutState].
+@ProviderFor(LogoutState)
+final logoutStateProvider =
+    AutoDisposeAsyncNotifierProvider<LogoutState, Option<Unit>>.internal(
+      LogoutState.new,
+      name: r'logoutStateProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$verifyForgetPasswordOtpStateHash,
+          : _$logoutStateHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$VerifyForgetPasswordOtpState =
-    AutoDisposeAsyncNotifier<Option<({String email, String otp})>>;
-String _$resetPasswordStateHash() =>
-    r'a3a0961372dc46f0fedc0afd63033afba6a50aa2';
-
-/// See also [ResetPasswordState].
-@ProviderFor(ResetPasswordState)
-final resetPasswordStateProvider =
-    AutoDisposeAsyncNotifierProvider<ResetPasswordState, Option<Unit>>.internal(
-      ResetPasswordState.new,
-      name: r'resetPasswordStateProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$resetPasswordStateHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$ResetPasswordState = AutoDisposeAsyncNotifier<Option<Unit>>;
+typedef _$LogoutState = AutoDisposeAsyncNotifier<Option<Unit>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

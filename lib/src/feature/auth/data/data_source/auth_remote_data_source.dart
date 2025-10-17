@@ -18,14 +18,6 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) {
 class AuthRemoteDataSource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String get loginPath => '/login';
-  String get registerPath => '/register';
-  String get verifyOtpPath => '/verify-otp';
-  String get sendOtpPath => '/send-otp';
-  String get resetPasswordPath => '/reset-password';
-  String get deleteUserPath => '/user/delete';
-  String get verifySocialTokenPath => '/auth/verify-social-token';
-
   UserApp? _userFromFirebase(User? user) {
     if (user == null) return null;
 
@@ -92,5 +84,21 @@ class AuthRemoteDataSource {
   // =====================================================
   Stream<UserApp?> get authStateChanges {
     return _auth.authStateChanges().map(_userFromFirebase);
+  }
+
+  // =====================================================
+  //                      Logout
+  // =====================================================
+  Future<void> logout() async {
+    try {
+      // Sign out from Firebase
+      await _auth.signOut();
+    } on FirebaseAuthException catch (e) {
+      // Handle specific Firebase auth exceptions
+      throw UnknownFailure('Logout failed: ${e.message}');
+    } catch (e) {
+      // Catch any other unexpected errors
+      throw UnknownFailure('An unexpected error occurred during logout: $e');
+    }
   }
 }

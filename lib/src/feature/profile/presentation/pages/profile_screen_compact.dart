@@ -62,6 +62,9 @@ class ProfileScreenCompact extends HookConsumerWidget {
     UserApp userData,
     WidgetRef ref,
   ) {
+    // final isLoading = ref.watch(
+    //   logoutStateProvider.select((value) => value.isLoading),
+    // );
     return CustomScrollView(
       physics: const ClampingScrollPhysics(),
       slivers: [
@@ -128,7 +131,11 @@ class ProfileScreenCompact extends HookConsumerWidget {
                 ),
                 30.height,
                 AppButton(
-                  onPressed: () {
+                  isLoading: ref.watch(
+                    logoutStateProvider.select((value) => value.isLoading),
+                  ),
+                  onPressed: () async {
+                    await ref.read(logoutStateProvider.notifier).logout();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),

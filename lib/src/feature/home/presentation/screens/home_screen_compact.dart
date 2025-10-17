@@ -6,7 +6,6 @@ import 'package:todo_list_app/src/core/extentions/space_extention.dart';
 import 'package:todo_list_app/src/core/extentions/when_ex.dart';
 import 'package:todo_list_app/src/core/utils/const/sizes.dart';
 import 'package:todo_list_app/src/core/view/component/base/safe_scaffold.dart';
-import 'package:todo_list_app/src/feature/auth/presentation/screens/login_screen.dart';
 import 'package:todo_list_app/src/feature/home/domain/task.dart';
 import 'package:todo_list_app/src/feature/home/presentation/components/custom_app_bar.dart';
 import 'package:todo_list_app/src/feature/home/presentation/components/task_card.dart';
@@ -72,17 +71,6 @@ class HomeScreenCompact extends HookConsumerWidget {
                       ),
                       title: "Home",
                       showBackButton: false,
-                      action: [
-                        IconButton(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginScreen(),
-                            ),
-                          ),
-                          icon: Icon(Icons.logout),
-                        ),
-                      ],
                     ),
                     const SizedBox(height: Sizes.paddingH24),
 

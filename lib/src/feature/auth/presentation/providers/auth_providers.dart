@@ -42,25 +42,6 @@ class LoginState extends _$LoginState {
   }
 }
 
-// Future<void> logout() async {
-//   final sharedPrefs = ref.read(sharedPreferencesServiceProvider);
-//   final authDataSource = ref.read(authRemoteDataSourceProvider);
-
-//   try {
-//     // Sign out from Firebase
-//     await authDataSource.logout();
-
-//     // Clear user data from SharedPreferences
-//     await sharedPrefs.clearUser();
-
-//     // Update state to null (logged out)
-//     state = const AsyncData(null);
-//   } catch (e, stackTrace) {
-//     state = AsyncError(e, stackTrace);
-//     rethrow;
-//   }
-// }
-
 /*================== Register =================*/
 @riverpod
 class RegisterState extends _$RegisterState {
@@ -83,46 +64,32 @@ class RegisterState extends _$RegisterState {
   }
 }
 
-/*================== VerifyForgetPasswordOtp =================*/
+/*================== Logout =================*/
 @riverpod
-class VerifyForgetPasswordOtpState extends _$VerifyForgetPasswordOtpState {
-  @override
-  FutureOr<Option<({String email, String otp})>> build() {
-    return const None();
-  }
-
-  // Future<void> verify(VerifyOtpParams params) async {
-  //   state = const AsyncLoading();
-  //   state = await AsyncValue.guard(() async {
-  //     await ref.read(authRepoProvider).verifyForgotPasswordOtp(params);
-  //     return Some((email: params.email, otp: params.otp));
-  //   });
-  // }
-}
-
-/*================== ResetPassword =================*/
-@riverpod
-class ResetPasswordState extends _$ResetPasswordState {
+class LogoutState extends _$LogoutState {
   @override
   FutureOr<Option<Unit>> build() {
     return const None();
   }
 
-  Future<void> reset(String password, String confirmPassword) async {
-    // state = const AsyncLoading();
-    // state = await AsyncValue.guard(() async {
-    //   final emailAndOtp = ref
-    //       .read(verifyForgetPasswordOtpStateProvider)
-    //       .requireValue
-    //       .toNullable()!;
-    //   final params = ResetPasswordParams(
-    //     email: emailAndOtp.email,
-    //     otp: emailAndOtp.otp,
-    //     password: password,
-    //     confirmPassword: confirmPassword,
-    //   );
-    //   await ref.read(authRepoProvider).resetPassword(params);
-    //   return const Some(unit);
-    // });
+  Future<void> logout() async {
+    state = const AsyncLoading();
+
+    try {
+      final sharedPrefs = ref.read(sharedPreferencesServiceProvider);
+      final authDataSource = ref.read(authRemoteDataSourceProvider);
+
+      await authDataSource.logout();
+
+      await sharedPrefs.clearUser();
+
+      ref.read(loginStateProvider.notifier).build();
+
+      state = AsyncData(some(unit));
+    } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
+
+      rethrow;
+    }
   }
 }

@@ -91,13 +91,10 @@ class AuthRemoteDataSource {
   // =====================================================
   Future<void> logout() async {
     try {
-      // Sign out from Firebase
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
-      // Handle specific Firebase auth exceptions
       throw UnknownFailure('Logout failed: ${e.message}');
     } catch (e) {
-      // Catch any other unexpected errors
       throw UnknownFailure('An unexpected error occurred during logout: $e');
     }
   }

@@ -142,7 +142,6 @@ class ProfileScreenCompact extends HookConsumerWidget {
                     );
                   },
                   type: AppButtonType.primary,
-
                   child: Text(
                     'Logout',
                     style: TextStyles.f14(

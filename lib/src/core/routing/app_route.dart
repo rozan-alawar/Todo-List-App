@@ -30,16 +30,12 @@ GoRouter goRouter(Ref ref) {
     routes: $appRoutes,
     refreshListenable: listenToRefresh,
     redirect: (BuildContext context, GoRouterState state) async {
-      final isLoggingIn =
-          state.matchedLocation == '/login' ||
-          state.matchedLocation == '/register';
-
       final isLoggedIn = await sharedPrefs.isLoggedIn();
-      if (!isLoggedIn) {
-        return isLoggingIn ? null : '/login';
-      }
-
-      if (isLoggingIn) {
+      // if (!isLoggedIn && state.matchedLocation != '/login/register') {
+      //   return isLoggingIn ? null : '/logisn';
+      // }
+      //
+      if (isLoggedIn) {
         return '/home';
       }
 
